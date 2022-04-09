@@ -3,13 +3,12 @@ package program;
 import entities.Product;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class Application {
     public static void main(String[] args) {
@@ -28,7 +27,15 @@ public class Application {
         }
 
         Double averagePrice = list.stream().mapToDouble(Product::getPrice).sum() / list.size();
-        System.out.println(averagePrice);
+        System.out.println(String.format("%.2f", averagePrice));
+
+        List<String> names = list.stream()
+                .filter(product -> product.getPrice() < averagePrice)
+                .sorted(Comparator.comparing(Product::getName).reversed())
+                .map(Product::getName)
+                .toList();
+
+        names.forEach(System.out::println);
 
 
     }
